@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0c14;color:#e8eaf0;font-family:'Nunito',sans-serif;}
+
+.page-title{text-align:center;padding:2rem 1rem 0.5rem;font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;text-transform:uppercase;}
+.page-sub{text-align:center;font-size:12px;color:#6b7280;margin-bottom:1.5rem;letter-spacing:1px;text-transform:uppercase;}
+
+/* TABS */
+.tabs{display:flex;justify-content:center;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;padding:0 1rem;}
+.tab{padding:7px 18px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #2a2d3e;background:#12141f;color:#6b7280;letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.tab.active{background:#7c3aed;border-color:#7c3aed;color:#fff;}
+
+/* UNIT GRID */
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:0 1rem 2rem;}
+.unit-card{background:#12141f;border:1px solid #1e2030;border-radius:12px;padding:14px;position:relative;transition:border-color .2s;}
+.unit-card:hover{border-color:#7c3aed;}
+.unit-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.unit-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;flex-shrink:0;border:2px solid;}
+.unit-info{}
+.unit-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.1;}
+.unit-class{font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
+.rarity-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:1px;}
+.ur-badge{background:#7c3aed22;color:#a78bfa;border:1px solid #7c3aed55;}
+.ssr-badge{background:#f59e0b22;color:#fbbf24;border:1px solid #f59e0b55;}
+
+.gear-label{font-size:9px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.gear-row{display:flex;flex-wrap:wrap;gap:4px;}
+.gear-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap;}
+
+/* SET TIER LIST */
+.tierlist{padding:0 1rem 2rem;}
+.tl-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;text-align:center;}
+.tl-sub{font-size:11px;color:#6b7280;text-align:center;margin-bottom:1.2rem;letter-spacing:1px;}
+.tl-row{display:flex;align-items:stretch;gap:10px;margin-bottom:8px;}
+.tl-tier{width:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;flex-shrink:0;}
+.tl-cards{display:flex;flex-wrap:wrap;gap:6px;flex:1;}
+.tl-card{background:#12141f;border:1px solid #1e2030;border-radius:8px;padding:8px 12px;flex:1;min-width:150px;}
+.tl-card-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;}
+.tl-card-bonus{font-size:10px;color:#6b7280;margin-bottom:4px;}
+.tl-card-count{font-size:10px;font-weight:700;margin-bottom:5px;}
+.tl-bar-bg{height:3px;background:#1e2030;border-radius:2px;overflow:hidden;margin-bottom:5px;}
+.tl-bar{height:100%;border-radius:2px;}
+.tl-units{font-size:9px;color:#4b5563;line-height:1.6;}
+
+.trash-section{background:#0f1016;border:1px solid #1e2030;border-radius:12px;padding:14px;margin:0 1rem 2rem;}
+.trash-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+.trash-pills{display:flex;flex-wrap:wrap;gap:5px;}
+.trash-pill{font-size:10px;color:#4b5563;background:#12141f;border:1px solid #1e2030;padding:3px 9px;border-radius:5px;text-decoration:line-through;}
+
+.hidden{display:none;}
+</style>
+
+<div class="page-title">Dragon Traveler</div>
+<div class="page-sub">Gear Build Reference · A Tier & Above · All Units</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('units')">Unit Builds</div>
+  <div class="tab" onclick="showTab('tierlist')">Gear Tier List</div>
+</div>
+
+<!-- UNIT BUILDS -->
+<div id="units-tab">
+<div class="unit-grid" id="unit-grid"></div>
+</div>
+
+<!-- GEAR TIER LIST -->
+<div id="tierlist-tab" class="hidden">
+<div class="tierlist">
+  <div class="tl-title">Gear Set Tier List</div>
+  <div class="tl-sub">Ranked by usage across all 47 A+ units · most used → trash</div>
+  <div id="tl-rows"></div>
+
+  <div class="trash-section">
+    <div class="trash-title">🗑 Skip These Sets — Zero Meta Representation</div>
+    <div class="trash-pills">
+      <span class="trash-pill">Resilience</span><span class="trash-pill">Wild</span><span class="trash-pill">Pain</span><span class="trash-pill">Redemption</span><span class="trash-pill">Rage</span><span class="trash-pill">Corruption</span><span class="trash-pill">Purge</span><span class="trash-pill">Chaos</span><span class="trash-pill">Order</span><span class="trash-pill">Break</span><span class="trash-pill">Demon Slayer</span><span class="trash-pill">Endless</span><span class="trash-pill">Frenzy</span><span class="trash-pill">Grievous Wound</span><span class="trash-pill">Crit Resist</span><span class="trash-pill">Cleave</span><span class="trash-pill">Magic Defense</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const CLASS_COLORS = {
+  Guardian:{bg:'#1e3a5f',border:'#3b82f6',text:'#60a5fa'},
+  Warrior:{bg:'#3b1515',border:'#ef4444',text:'#f87171'},
+  Mage:{bg:'#2d1b69',border:'#8b5cf6',text:'#a78bfa'},
+  Priest:{bg:'#064e3b',border:'#10b981',text:'#34d399'},
+  Archer:{bg:'#4b3800',border:'#f59e0b',text:'#fbbf24'},
+  Assassin:{bg:'#1f1f2e',border:'#6366f1',text:'#818cf8'},
+};
+
+const SET_COLORS = {
+  'Attack Speed':'#3b82f6','HP':'#10b981','Haste':'#8b5cf6',
+  'Penetration':'#f59e0b','Judgment':'#ef4444','Arcane':'#6366f1',
+  'Crit Damage':'#ec4899','Attack':'#f97316','Longevity':'#14b8a6',
+  'Crit':'#eab308','Block':'#64748b','Healing':'#22c55e',
+  'Evade':'#06b6d4','Magic Power':'#a855f7','Energy':'#0ea5e9',
+  'Swift Strike':'#f43f5e','Impact':'#78716c','Bloodthirst':'#dc2626',
+  'Physical Defense':'#475569','Thorns':'#84cc16','Focus':'#38bdf8',
+};
+
+const units = [
+  {name:'Salome',class:'Guardian',rarity:'SSR+',primary:'HP',sets:['HP','Longevity'],note:'5pc HP + Longevity accessory'},
+  {name:'Oberonnie',class:'Guardian',rarity:'SSR',primary:'HP',sets:['HP','Longevity'],note:'5pc HP + Longevity accessory'},
+  {name:'Helveil',class:'Guardian',rarity:'SSR+',primary:'HP',sets:['HP','Longevity'],note:'4pc HP + Longevity accessory'},
+  {name:'Prometheus',class:'Guardian',rarity:'UR',primary:'HP',sets:['HP','Longevity'],note:'4pc HP + Longevity accessory'},
+  {name:'Anubis',class:'Guardian',rarity:'SSR+',primary:'HP',sets:['HP','Longevity'],note:'4pc HP + Longevity accessory'},
+  {name:'Pompey',class:'Guardian',rarity:'SSR+',primary:'HP',sets:['HP','Evade'],note:'4pc HP + Evade accessory'},
+  {name:'Athena',class:'Guardian',rarity:'UR',primary:'Block',sets:['Block','Swift Strike','Longevity'],note:'4pc Block + Swift Strike + Longevity'},
+  {name:'Dvalin',class:'Guardian',rarity:'SSR+',primary:'Block',sets:['Block','Arcane'],note:'4pc Block + 2pc Arcane'},
+  {name:'Caesar',class:'Guardian',rarity:'SSR+',primary:'Physical Defense',sets:['Physical Defense','Thorns'],note:'4pc Phys Def + Thorns accessory'},
+  {name:'Thor',class:'Warrior',rarity:'UR',primary:'HP',sets:['HP','Bloodthirst','Evade'],note:'4pc HP + Bloodthirst + Evade'},
+  {name:'Azure Dragon',class:'Warrior',rarity:'SSR+',primary:'HP',sets:['HP','Energy'],note:'4pc HP + 2pc Energy'},
+  {name:'Marylis',class:'Warrior',rarity:'SSR+',primary:'HP',sets:['HP','Evade','Penetration'],note:'4pc HP + Evade + Penetration'},
+  {name:'Asmodeus',class:'Warrior',rarity:'SSR+',primary:'Haste',sets:['Haste','Bloodthirst','Judgment'],note:'4pc Haste + Bloodthirst + Judgment'},
+  {name:'Tyrfing',class:'Warrior',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+  {name:'Asteros',class:'Warrior',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Evade','Penetration'],note:'4pc Atk Speed + Evade + Pen'},
+  {name:'Vivienne',class:'Priest',rarity:'SSR+',primary:'Attack',sets:['Attack','Impact'],note:'5pc Attack + Impact accessory'},
+  {name:'Venus',class:'Priest',rarity:'UR',primary:'HP',sets:['HP','Arcane'],note:'4pc HP + 2pc Arcane'},
+  {name:'Scheherazade',class:'Priest',rarity:'SSR+',primary:'HP',sets:['HP','Arcane'],note:'4pc HP + 2pc Arcane'},
+  {name:'Morgana',class:'Priest',rarity:'SSR+',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Atanith',class:'Priest',rarity:'SSR',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Hela',class:'Priest',rarity:'UR',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Spimo',class:'Priest',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Arcane'],note:'4pc Atk Speed + 2pc Arcane'},
+  {name:'Chiron',class:'Priest',rarity:'SSR',primary:'Healing',sets:['Healing','Energy'],note:'4pc Healing + 2pc Energy'},
+  {name:'Goblin War Drummer',class:'Priest',rarity:'◆',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Poseidon',class:'Mage',rarity:'UR',primary:'Attack',sets:['Attack','Magic Power'],note:'5pc Attack + Magic Power'},
+  {name:'Vermilion Bird',class:'Mage',rarity:'SSR+',primary:'Crit Damage',sets:['Crit Damage','Magic Power','Judgment'],note:'4pc Crit Dmg + Magic Power + Judgment'},
+  {name:'Gabriele',class:'Mage',rarity:'SSR+',primary:'Crit Damage',sets:['Crit Damage','Magic Power','Judgment'],note:'4pc Crit Dmg + Magic Power + Judgment'},
+  {name:'Catherine',class:'Mage',rarity:'SSR+',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Cleopatra',class:'Mage',rarity:'SSR+',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Talos',class:'Mage',rarity:'SSR+',primary:'Crit',sets:['Crit','Penetration','Judgment'],note:'4pc Crit + Pen + Judgment'},
+  {name:'Loki',class:'Mage',rarity:'UR',primary:'Crit Damage',sets:['Crit Damage','Penetration','Judgment'],note:'4pc Crit Dmg + Pen + Judgment'},
+  {name:'Artemis',class:'Archer',rarity:'UR',primary:'Haste',sets:['Haste','Arcane'],note:'4pc Haste + 2pc Arcane'},
+  {name:'Orion',class:'Archer',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+  {name:'Ifrit',class:'Archer',rarity:'SSR+',primary:'Crit',sets:['Crit','Penetration','Judgment'],note:'4pc Crit + Pen + Judgment'},
+  {name:'Apollo',class:'Archer',rarity:'UR',primary:'Attack',sets:['Attack','Penetration','Judgment'],note:'4pc Attack + Pen + Judgment'},
+  {name:'Lorilin',class:'Archer',rarity:'SSR',primary:'Attack',sets:['Attack','Penetration','Judgment'],note:'4pc Attack + Pen + Judgment'},
+  {name:'Mimir',class:'Archer',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+  {name:'Jing',class:'Archer',rarity:'SSR+',primary:'Crit',sets:['Crit','Penetration','Judgment'],note:'4pc Crit + Pen + Judgment'},
+  {name:'Huginn & Muninn',class:'Archer',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Attack','Swift Strike'],note:'4pc Atk Speed + Attack + Swift Strike'},
+  {name:'Ningrose',class:'Archer',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+  {name:'Medusa',class:'Archer',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Attack','Swift Strike'],note:'4pc Atk Speed + Attack + Swift Strike'},
+  {name:'Hermes',class:'Assassin',rarity:'UR',primary:'Crit Damage',sets:['Crit Damage','Penetration','Judgment'],note:'4pc Crit Dmg + Pen + Judgment'},
+  {name:'Zagreus',class:'Assassin',rarity:'SSR+',primary:'Haste',sets:['Haste','Focus'],note:'4pc Haste + 2pc Focus'},
+  {name:'Lilith',class:'Assassin',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+  {name:'Hades',class:'Assassin',rarity:'UR',primary:'Crit Damage',sets:['Crit Damage','Impact','Judgment'],note:'4pc Crit Dmg + Impact + Judgment'},
+  {name:'Rin',class:'Assassin',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Evade','Swift Strike'],note:'4pc Atk Speed + Evade + Swift Strike'},
+  {name:'Tyrfing',class:'Warrior',rarity:'SSR+',primary:'Attack Speed',sets:['Attack Speed','Penetration','Judgment'],note:'4pc Atk Speed + Pen + Judgment'},
+];
+
+// deduplicate
+const seen = new Set();
+const uniqueUnits = units.filter(u=>{
+  if(seen.has(u.name)) return false;
+  seen.add(u.name); return true;
+});
+
+function initials(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+function pillHTML(setName){
+  const c = SET_COLORS[setName]||'#6b7280';
+  return `<span class="gear-pill" style="background:${c}22;color:${c};border:1px solid ${c}44">${setName}</span>`;
+}
+
+// render unit cards
+const grid = document.getElementById('unit-grid');
+uniqueUnits.forEach(u=>{
+  const cc = CLASS_COLORS[u.class]||CLASS_COLORS.Warrior;
+  const rarityClass = u.rarity==='UR' ? 'ur-badge' : 'ssr-badge';
+  const gearPills = [...new Set(u.sets)].map(pillHTML).join('');
+  grid.innerHTML += `
+  <div class="unit-card">
+    <span class="rarity-badge ${rarityClass}">${u.rarity}</span>
+    <div class="unit-header">
+      <div class="unit-avatar" style="background:${cc.bg};border-color:${cc.border};color:${cc.text}">${initials(u.name)}</div>
+      <div class="unit-info">
+        <div class="unit-name">${u.name}</div>
+        <div class="unit-class">${u.class}</div>
+      </div>
+    </div>
+    <div class="gear-label">Recommended Gear</div>
+    <div class="gear-row">${gearPills}</div>
+    <div style="font-size:9px;color:#374151;margin-top:6px;">${u.note}</div>
+  </div>`;
+});
+
+// tally sets
+const tally = {};
+uniqueUnits.forEach(u=>{
+  [...new Set(u.sets)].forEach(s=>{
+    tally[s]=(tally[s]||0)+1;
+  });
+});
+const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
+const maxCount = sorted[0][1];
+
+const tierDefs = [
+  {label:'S',bg:'#1e1060',color:'#818cf8',min:9},
+  {label:'A',bg:'#064e3b',color:'#34d399',min:5},
+  {label:'B',bg:'#4b3800',color:'#fbbf24',min:2},
+  {label:'C',bg:'#3b1515',color:'#f87171',min:1},
+];
+
+const SET_BONUS = {
+  'Attack Speed':'2pc: +13% Atk Speed','HP':'1pc: +10% HP','Haste':'2pc: +10 Haste',
+  'Penetration':'1pc: +20% Atk, ignores 12% def','Judgment':'1pc: +12 Haste, +20% Overdrive dmg',
+  'Arcane':'2pc: +15% HP, -1 Overdrive energy','Crit Damage':'2pc: +18% Crit Damage',
+  'Attack':'1pc: +10% Attack','Longevity':'1pc: +40% HP, -16% Atk','Crit':'2pc: +200 Crit',
+  'Block':'2pc: +200 Block','Healing':'2pc: +16% Healing effect','Evade':'1pc: +20% HP, +120 Dodge',
+  'Magic Power':'1pc: +32% Magic dmg','Energy':'2pc: +20% HP, +1 Overdrive pt',
+  'Swift Strike':'1pc: +32% Atk Speed, -20% Atk','Impact':'1pc: +40% Atk, -16% Atk Speed',
+  'Bloodthirst':'1pc: +20% Atk, +8% Lifesteal','Physical Defense':'1pc: +15% Phys Def',
+  'Thorns':'1pc: +24% Phys Def, +8% Counter dmg','Focus':'2pc: +24% Atk Speed, +240 Hit',
+};
+
+const SET_UNITS = {};
+uniqueUnits.forEach(u=>{
+  [...new Set(u.sets)].forEach(s=>{
+    if(!SET_UNITS[s]) SET_UNITS[s]=[];
+    SET_UNITS[s].push(u.name);
+  });
+});
+
+const tlRows = document.getElementById('tl-rows');
+tierDefs.forEach((tier,ti)=>{
+  const entries = sorted.filter(([s,c])=>{
+    const next = tierDefs[ti+1];
+    return c >= tier.min && (!next || c >= next.min) && (ti===0 ? c>=tier.min : c < tierDefs[ti-1].min);
+  });
+  if(!entries.length) return;
+  const cards = entries.map(([s,c])=>{
+    const col = SET_COLORS[s]||'#6b7280';
+    const pct = Math.round((c/maxCount)*100);
+    const units = (SET_UNITS[s]||[]).join(' · ');
+    return `<div class="tl-card">
+      <div class="tl-card-name" style="color:${col}">${s}</div>
+      <div class="tl-card-bonus">${SET_BONUS[s]||''}</div>
+      <div class="tl-card-count" style="color:${col}">${c} unit${c>1?'s':''}</div>
+      <div class="tl-bar-bg"><div class="tl-bar" style="width:${pct}%;background:${col}"></div></div>
+      <div class="tl-units">${units}</div>
+    </div>`;
+  }).join('');
+  tlRows.innerHTML += `<div class="tl-row">
+    <div class="tl-tier" style="background:${tier.bg};color:${tier.color}">${tier.label}</div>
+    <div class="tl-cards">${cards}</div>
+  </div>`;
+});
+
+function showTab(tab){
+  document.getElementById('units-tab').classList.toggle('hidden', tab!=='units');
+  document.getElementById('tierlist-tab').classList.toggle('hidden', tab!=='tierlist');
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', (i===0&&tab==='units')||(i===1&&tab==='tierlist'));
+  });
+}
+</script>
